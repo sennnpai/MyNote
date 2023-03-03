@@ -7,15 +7,15 @@ import com.example.sevenproject.data.model.NoteEntity
 interface NoteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertNote(noteEntity: NoteEntity)
+    suspend fun insertNote(noteEntity: NoteEntity)
 
     @Update
-    fun updateNote(noteEntity: NoteEntity)
+    suspend fun updateNote(noteEntity: NoteEntity)
 
     @Delete
-    fun deleteNote(noteEntity: NoteEntity)
+    suspend fun deleteNote(noteEntity: NoteEntity)
 
     @Query("SELECT * FROM notes")
-    fun getAllNotes(): List<NoteEntity>
+    suspend fun getAllNotes(): List<NoteEntity>
 
 }
