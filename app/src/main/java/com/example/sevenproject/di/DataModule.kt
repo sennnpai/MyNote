@@ -3,6 +3,10 @@ package com.example.sevenproject.di
 import android.content.Context
 import androidx.room.Room
 import com.example.sevenproject.data.local.AppDataBase
+import com.example.sevenproject.data.repo.NoteRepositoryImpl
+import com.example.sevenproject.domain.usecase.CreateNoteUseCase
+import com.example.sevenproject.domain.usecase.GetAllUseCase
+import dagger.Component.Factory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,8 +20,7 @@ import javax.inject.Singleton
 object DataModule {
 
     @Provides
-    @Singleton
-    fun appDataBases(@ApplicationContext context: Context) = Room.databaseBuilder(
+    fun appDataBases(@ApplicationContext context: Context): AppDataBase = Room.databaseBuilder(
         context,
         AppDataBase::class.java,
         "Note-db"
@@ -27,5 +30,15 @@ object DataModule {
     @Provides
     @Singleton
     fun noteDao(appDataBase: AppDataBase) = appDataBase.getDao()
+
+    @Provides
+    @Singleton
+    fun getALlUSeCases(noteRepositoryImpl: NoteRepositoryImpl) = GetAllUseCase(noteRepositoryImpl)
+
+
+    @Provides
+    @Singleton
+    fun insertUseCases(noteRepositoryImpl: NoteRepositoryImpl) = CreateNoteUseCase(noteRepositoryImpl)
+
 
 }

@@ -1,5 +1,7 @@
 package com.example.sevenproject.domain.utils
 
+import com.example.sevenproject.domain.model.Note
+
 sealed class ResultStatus<T>(
     val data:T? = null,
    val error: String? = null

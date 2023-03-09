@@ -6,6 +6,6 @@ import javax.inject.Inject
 class GetAllUseCase @Inject constructor(
     private val noteRepository: NoteRepository
     ) {
-        fun getAllNotes() =
+        operator fun invoke() =
             noteRepository.getAllNotes()
     }
