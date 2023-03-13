@@ -60,6 +60,19 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"/>
 
+  <com.google.android.material.progressindicator.CircularProgressIndicator
+      app:trackColor="@color/black"
+      app:indicatorColor="@color/teal_700"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      android:progress="70"
+      android:visibility="gone"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/add_note_progress"/>
+
 
 
 

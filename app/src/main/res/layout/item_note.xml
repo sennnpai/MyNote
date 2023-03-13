@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="140dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+
+        app:cardCornerRadius="20dp"
+        android:layout_margin="15dp"
+        android:backgroundTint="@color/add_color"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:textColor="@color/white"
+            android:text="Title"
+            android:textSize="20dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <TextView
+            android:id="@+id/tv_des"
+            android:textColor="@color/white"
+            android:text="Description"
+            android:textSize="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+
+            android:layout_marginTop="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:textColor="@color/white"
+            android:text="Date"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginTop="60dp"
+            android:layout_marginStart="260dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

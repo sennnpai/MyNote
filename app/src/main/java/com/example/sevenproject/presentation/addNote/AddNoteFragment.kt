@@ -5,80 +5,75 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.sevenproject.R
 import com.example.sevenproject.databinding.FragmentAddNoteBinding
 import com.example.sevenproject.domain.model.Note
 import com.example.sevenproject.presentation.base.BaseFragment
+import com.example.sevenproject.presentation.extention.showToast
 import com.example.sevenproject.presentation.notes.NotesFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddNoteFragment  : BaseFragment<AddNoteViewModel, FragmentAddNoteBinding>() {
+class AddNoteFragment : BaseFragment<AddNoteViewModel, FragmentAddNoteBinding>(FragmentAddNoteBinding::inflate) {
 
     override val viewModel: AddNoteViewModel by viewModels()
-    override lateinit var binding: FragmentAddNoteBinding
+    private val note by lazy { arguments?.getSerializable(NotesFragment.KEY) as Note? }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentAddNoteBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val note = arguments?.getSerializable(NotesFragment.KEY) as Note?
-
-        if (arguments != null){
+    override fun initialize() {
+        if (arguments != null) {
             binding.edTitle.setText(note?.title)
             binding.edDes.setText(note?.description)
         }
+    }
 
-        binding.btnSaveNote.setOnClickListener{
-            if(arguments != null) {
-                viewModel.updateNotes(
-                    Note(
+    override fun listeners() {
+        with(binding) {
+            btnSaveNote.setOnClickListener {
+                if(arguments != null){
+                    viewModel.updateNotes(
                         id = note?.id!!,
-                        title = binding.edTitle.text.toString(),
-                        description = binding.edDes.text.toString(),
-                        createdAt = 0
+                        edTitle.text.toString(),
+                        edDes.text.toString()
                     )
-                )
-            }else{
-                viewModel.insertAllNotes(Note(
+                }else {
+                    viewModel.insertAllNotes(
+                        edTitle.text.toString(),
+                        edDes.text.toString()
+                    )
+                }
 
-                    title = binding.edTitle.text.toString(),
-                    description = binding.edDes.text.toString(),
-                    createdAt = 0
-                ))
             }
-            findNavController().navigateUp()
         }
+
+
     }
 
 
-
     override fun setupRequests() {
-        viewModel.noteState.collectState(onLoading = {
-            Log.d("ololo", "AddNote: Loading")
+        viewModel.updateNoteState.collectState(onLoading = {
+            binding.addNoteProgress.isVisible = true
         }, onError = {
-            Log.d("ololo", "AddNote: Error")
+            binding.addNoteProgress.isVisible = false
+            showToast(it)
         }, onSuccess = {
-            Log.d("ololo", "AddNote: Success $it")
+            showToast(R.string.updated)
+            findNavController().navigateUp()
 
         })
 
-        viewModel.updateNoteState.collectState(onLoading = {
-            Log.d("ololo", "AddNote: Loading")
+        viewModel.noteState.collectState(onLoading = {
+            binding.addNoteProgress.isVisible = true
         }, onError = {
-            Log.d("ololo", "AddNote: Error")
+            binding.addNoteProgress.isVisible = false
+            showToast(it)
         }, onSuccess = {
-            Log.d("ololo", "AddNote: Success $it")
-
+            binding.addNoteProgress.isVisible = false
+            showToast(R.string.insert)
+            findNavController().navigateUp()
         })
 
     }

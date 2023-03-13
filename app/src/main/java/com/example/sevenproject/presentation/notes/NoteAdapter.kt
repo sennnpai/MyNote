@@ -2,14 +2,16 @@ package com.example.sevenproject.presentation.notes
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.sevenproject.databinding.ItemNoteBinding
 import com.example.sevenproject.domain.model.Note
 
-class NoteAdapter(val click:(Note) -> Unit, private val viewModel: NotesViewModel) : ListAdapter<Note, NoteAdapter.NoteViewHolder>(PLDDifferentCallBack) {
-
+class NoteAdapter(
+    val click: (Note) -> Unit,
+    private val viewModel: NotesViewModel
+) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
+    private var items = arrayListOf<Note>()
 
     class NoteViewHolder(private val binding: ItemNoteBinding) : ViewHolder(binding.root) {
         fun bindTo(item: Note) {
@@ -21,36 +23,31 @@ class NoteAdapter(val click:(Note) -> Unit, private val viewModel: NotesViewMode
     }
 
     fun deleteItem(position: Int) {
-        val item = getItem(position)
-        viewModel.deleteNotes(item)
+        viewModel.deleteNotes(items.removeAt(position))
+        notifyItemRemoved(position)
     }
 
+    fun addItem(items: List<Note>) {
+        this.items = items as ArrayList<Note>
+        notifyDataSetChanged()
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder =
         NoteViewHolder(ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
+    override fun getItemCount(): Int {
+        return items.size
+    }
+
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        holder.bindTo(getItem(position))
-        holder.itemView.setOnClickListener{
-            click(getItem(position))
+        holder.bindTo(items[position])
+        holder.itemView.setOnClickListener {
+            click(items[position])
         }
 
     }
 
-
-
-    companion object{
-        val PLDDifferentCallBack = object : DiffUtil.ItemCallback<Note>() {
-            override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
-                return oldItem.id == newItem.id
-            }
-
-            override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
-                return oldItem == newItem
-            }
-        }
-    }
 
 }
 

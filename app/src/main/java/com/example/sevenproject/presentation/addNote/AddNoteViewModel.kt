@@ -23,12 +23,31 @@ class AddNoteViewModel @Inject constructor(
     private val _updateNoteState = MutableStateFlow<UiState<Unit>>(UiState.Empty())
     val updateNoteState = _updateNoteState.asStateFlow()
 
-    fun insertAllNotes(note: Note) {
-        createNoteUseCase(note).collectFlow(_noteState)
+    fun insertAllNotes(title:String, desc:String) {
+        if(title.isNotEmpty() && desc.isNotEmpty()){
+            createNoteUseCase(Note(
+                title = title,
+                description = desc,
+                createdAt = System.currentTimeMillis()
+            )).collectFlow(_noteState)
+        }else{
+            _noteState.value = UiState.Error("Title is Empty")
+        }
+
     }
 
-    fun updateNotes(note: Note) {
-        updateNoteUseCase(note).collectFlow(_updateNoteState)
+    fun updateNotes(id:Int, title:String, desc:String) {
+        if(id != null && title.isNotEmpty() && desc.isNotEmpty()){
+            updateNoteUseCase(Note(
+                id = id,
+                title = title,
+                description = desc,
+                createdAt = System.currentTimeMillis()
+            )).collectFlow(_updateNoteState)
+        }else{
+            _updateNoteState.value = UiState.Error("Title is Empty")
+        }
+
     }
 
 }

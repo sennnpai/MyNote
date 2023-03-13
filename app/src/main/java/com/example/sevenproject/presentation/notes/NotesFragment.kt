@@ -2,10 +2,8 @@ package com.example.sevenproject.presentation.notes
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -14,41 +12,26 @@ import com.example.sevenproject.R
 import com.example.sevenproject.databinding.FragmentNotesBinding
 import com.example.sevenproject.domain.model.Note
 import com.example.sevenproject.presentation.base.BaseFragment
+import com.example.sevenproject.presentation.extention.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class NotesFragment : BaseFragment<NotesViewModel, FragmentNotesBinding>() {
+class NotesFragment :
+    BaseFragment<NotesViewModel, FragmentNotesBinding>(FragmentNotesBinding::inflate) {
 
     private lateinit var adapter: NoteAdapter
     private var alertDialog: AlertDialog? = null
     override val viewModel: NotesViewModel by viewModels()
-    override lateinit var binding: FragmentNotesBinding
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentNotesBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
-
-
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.getAllNotes()
+    override fun initialize() {
         adapter = NoteAdapter(this::onClick, viewModel)
         binding.rvNotes.adapter = adapter
+    }
 
-
+    override fun listeners() {
         binding.btnAddNote.setOnClickListener {
             findNavController().navigate(R.id.addNoteFragment)
-
         }
-
 
         val swipeToDelete = object : Swipe() {
 
@@ -76,24 +59,31 @@ class NotesFragment : BaseFragment<NotesViewModel, FragmentNotesBinding>() {
         itemTouchHelper.attachToRecyclerView(binding.rvNotes)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getAllNotes()
+    }
 
 
     override fun setupRequests() {
         viewModel.noteState.collectState(onLoading = {
-            Log.d("ololo", "Note: Loading")
+            binding.noteProgress.isVisible = true
         }, onError = {
-            Log.d("ololo", "Note: Error")
+            binding.noteProgress.isVisible = false
+            showToast(it)
         }, onSuccess = {
-            Log.d("ololo", "Note: Success $it")
-            adapter.submitList(it)
+            binding.noteProgress.isVisible = false
+            adapter.addItem(it)
         })
 
         viewModel.deleteNoteState.collectState(onLoading = {
-            Log.d("ololo", "Note: Loading")
+            binding.noteProgress.isVisible = true
         }, onError = {
-            Log.d("ololo", "Note: Error")
+            binding.noteProgress.isVisible = false
+            showToast(it)
         }, onSuccess = {
-            Log.d("ololo", "Note: Success $it")
+            binding.noteProgress.isVisible = false
+            showToast(R.string.delete)
         })
     }
 
@@ -107,8 +97,6 @@ class NotesFragment : BaseFragment<NotesViewModel, FragmentNotesBinding>() {
     companion object {
         const val KEY = "key"
     }
-
-
 
 
 }
