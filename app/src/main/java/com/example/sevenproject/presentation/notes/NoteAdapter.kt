@@ -9,7 +9,6 @@ import com.example.sevenproject.domain.model.Note
 
 class NoteAdapter(
     val click: (Note) -> Unit,
-    private val viewModel: NotesViewModel
 ) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
     private var items = arrayListOf<Note>()
 
@@ -22,9 +21,9 @@ class NoteAdapter(
         }
     }
 
-    fun deleteItem(position: Int) {
-        viewModel.deleteNotes(items.removeAt(position))
+    fun deleteItem(position: Int) : Note {
         notifyItemRemoved(position)
+        return items.removeAt(position)
     }
 
     fun addItem(items: List<Note>) {

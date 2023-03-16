@@ -24,7 +24,7 @@ class NotesFragment :
     override val viewModel: NotesViewModel by viewModels()
 
     override fun initialize() {
-        adapter = NoteAdapter(this::onClick, viewModel)
+        adapter = NoteAdapter(this::onClick)
         binding.rvNotes.adapter = adapter
     }
 
@@ -42,7 +42,7 @@ class NotesFragment :
                     setTitle("Удалить эту заметку")
                     setMessage("Ты точно хочешь удалить?")
                     setPositiveButton("Да") { _, _ ->
-                        adapter.deleteItem(viewHolder.adapterPosition)
+                        viewModel.deleteNotes(adapter.deleteItem(viewHolder.adapterPosition))
 
                     }
                     setNegativeButton("Нет") { _, _ ->
@@ -59,13 +59,9 @@ class NotesFragment :
         itemTouchHelper.attachToRecyclerView(binding.rvNotes)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.getAllNotes()
-    }
-
 
     override fun setupRequests() {
+        viewModel.getAllNotes()
         viewModel.noteState.collectState(onLoading = {
             binding.noteProgress.isVisible = true
         }, onError = {
