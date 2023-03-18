@@ -21,10 +21,6 @@ class NotesViewModel @Inject constructor(
     private val _deleteNoteSate = MutableStateFlow<UiState<Unit>>(UiState.Empty())
     val deleteNoteState = _deleteNoteSate.asStateFlow()
 
-    init {
-        getAllNotes()
-    }
-
     fun getAllNotes() {
         getAllUseCase().collectFlow(_noteState)
     }

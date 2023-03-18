@@ -2,7 +2,6 @@ package com.example.sevenproject.presentation.notes
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController

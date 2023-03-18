@@ -19,17 +19,20 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DataModule {
 
+
+
+
+    @Provides
+    @Singleton
+    fun noteDao(appDataBase: AppDataBase) = appDataBase.getDao()
+
+
     @Provides
     fun appDataBases(@ApplicationContext context: Context): AppDataBase = Room.databaseBuilder(
         context,
         AppDataBase::class.java,
         "Note-db"
     ).build()
-
-
-    @Provides
-    @Singleton
-    fun noteDao(appDataBase: AppDataBase) = appDataBase.getDao()
 
     @Provides
     @Singleton
